@@ -3,6 +3,8 @@
 template <typename T>
 class BluetoothMeState {
   public:
+    inline static const String GET_STATE_TAG = "get";
+
     BluetoothMeState(String tag, T initialValue = T()) {
       _tag = tag;
       _value = initialValue;

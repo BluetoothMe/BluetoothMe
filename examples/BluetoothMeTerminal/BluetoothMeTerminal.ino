@@ -16,30 +16,28 @@ SoftwareSerialAdapter bluetoothAdapter(&bluetoothSerial, 9600, 100); // port (or
 
 BluetoothMe bluetoothMe(&bluetoothAdapter);
 
-void onReceive(String tag, String value);
-
 void setup() {
+  // In the Serial Monitor, select the correct baud rate and the `Newline` option
   Serial.begin(9600);
   Serial.setTimeout(1000);
 }
 
 void loop() {
-  String inputMessage = bluetoothMe.listen(onReceive); // or bluetoothMe.listen()
-  
+  String inputMessage = bluetoothMe.listen();
   if (!inputMessage.equals("")) {
     writeSerialMonitor(inputMessage, false);
   }
 
+  listenSerialMonitor();
+}
+
+void listenSerialMonitor() {
   if (Serial.available()) {
     String outputMessage = Serial.readStringUntil('\n');
     writeSerialMonitor(outputMessage, true);
     bluetoothMe.send(outputMessage);
-    // bluetoothMe.exec(outputMessage);
+    // bluetoothMe.exec(outputMessage + "\r\n"); // May require CR+LF characters at the end of the AT-command depending on the model
   }
-}
-
-void onReceive(String tag, String value) {
-  // TODO
 }
 
 void writeSerialMonitor(String message, bool output) {
